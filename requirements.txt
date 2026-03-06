@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+jinja2
+groq
+opencv-python-headless
+pillow
+numpy
+python-dotenv
+httpx
+pytest

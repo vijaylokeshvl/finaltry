@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleSense AI - Your Personal Fashion Advisor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>StyleSense AI</span>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero-section">
+            <h1 class="main-title">Discover Your Perfect Style</h1>
+            <p class="subtitle">Upload a photo to receive AI-powered, personalized fashion recommendations based on your
+                unique profile and skin tone.</p>
+        </section>
+
+        <section class="analysis-card glass-panel">
+            <form id="uploadForm" class="upload-form">
+
+                <div class="gender-selector">
+                    <h3>I am looking for:</h3>
+                    <div class="radio-group">
+                        <input type="radio" id="gender-male" name="gender" value="Male" checked>
+                        <label for="gender-male"><i class="fa-solid fa-mars"></i> Men's Styling</label>
+
+                        <input type="radio" id="gender-female" name="gender" value="Female">
+                        <label for="gender-female"><i class="fa-solid fa-venus"></i> Women's Styling</label>
+
+                        <input type="radio" id="gender-neutral" name="gender" value="Neutral">
+                        <label for="gender-neutral"><i class="fa-solid fa-genderless"></i> Gender Neutral</label>
+                    </div>
+                </div>
+
+                <div class="drop-zone" id="dropZone">
+                    <span class="drop-zone__prompt">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <br>Drop your photo here or click to browse
+                        <p class="small-text">Supported formats: JPG, PNG, WEBP (Max 10MB)</p>
+                    </span>
+                    <input type="file" name="image" id="fileInput" class="drop-zone__input"
+                        accept="image/jpeg, image/png, image/webp" required>
+                    <div class="preview-container" id="previewContainer" style="display: none;">
+                        <img id="imagePreview" src="" alt="Image Preview">
+                        <button type="button" id="removeImageBtn" class="btn btn-secondary">Remove</button>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-large" disabled>
+                    <i class="fa-solid fa-bolt"></i> Generate Style Profile
+                </button>
+            </form>
+
+            <div id="loadingIndicator" class="loading-state" style="display: none;">
+                <div class="spinner"></div>
+                <p>Analyzing skin tone and consulting our AI fashion experts...</p>
+            </div>
+        </section>
+
+        <section id="resultsSection" class="results-section" style="display: none;">
+            <!-- Content will be populated by JS -->
+        </section>
+
+        <section class="trends-section mt-4">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-arrow-trend-up"></i> 2026 Fashion Trends</h2>
+            </div>
+            <div id="trendsContainer" class="trends-grid mt-2">
+                <!-- Trends populated by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer glass-panel">
+        <p>Powered by Groq LLaMA 3.3 70B & OpenCV &copy; 2026 StyleSense AI</p>
+    </footer>
+
+    <!-- Template for results -->
+    <template id="resultsTemplate">
+        <div class="results-grid">
+
+            <div class="result-card glass-panel skin-tone-card">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-palette"></i> Your Style Profile</h2>
+                </div>
+                <div class="card-body">
+                    <div class="tone-display">
+                        <div class="color-swatch" id="skinToneSwatch"></div>
+                        <div>
+                            <h3 id="skinToneName">Medium</h3>
+                            <p class="summary-text" id="styleSummary"></p>
+                        </div>
+                    </div>
+
+                    <h4 class="section-subtitle mt-4">Your Perfect Color Palette</h4>
+                    <div class="color-palette" id="colorPalette">
+                        <!-- Colors inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="suggestions-column">
+                <div class="result-card glass-panel">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-shirt"></i> Outfit Recommendations</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="styled-list" id="outfitList"></ul>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols">
+                    <div class="result-card glass-panel">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-gem"></i> Accessories</h2>
+                        </div>
+                        <div class="card-body">
+                            <ul class="styled-list small" id="accessoryList"></ul>
+                        </div>
+                    </div>
+
+                    <div class="result-card glass-panel">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-scissors"></i> Hairstyles</h2>
+                        </div>
+                        <div class="card-body">
+                            <ul class="styled-list small" id="hairstyleList"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="shopping-section glass-panel mt-4">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-cart-shopping"></i> Curated Shopping Links</h2>
+            </div>
+            <div class="card-body shopping-grid" id="shoppingList">
+                <!-- Shopping cards inserted here -->
+            </div>
+        </div>
+    </template>
+
+    <template id="trendTemplate">
+        <div class="trend-card glass-panel">
+            <span class="trend-tag"></span>
+            <h3></h3>
+            <p></p>
+        </div>
+    </template>
+
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>
